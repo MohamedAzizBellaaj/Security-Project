@@ -1,0 +1,9 @@
+dn: cn=grp-GL,ou=Group,dc=local
+changetype: modify
+add: memberUid
+memberUid: uid=bellaaj
+
+dn: cn=grp-RT,ou=Group,dc=local
+changetype: modify
+add: memberUid
+memberUid: badri
