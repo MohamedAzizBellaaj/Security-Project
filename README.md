@@ -1,8 +1,31 @@
-## SSH, Apche, Openvpn authentification via OpenLdap
+- [SSH, Apche, Openvpn authentification via OpenLdap](#SSH-Apche-Openvpn-authentification-via-OpenLdap)
+    - [Section1: OpenLdap](#Section1-OpenLdap)
+    - [Section 2: SSH authentification via OpenLDAP](#Section-2-SSH-authentification-via-OpenLDAP)
+    - [Section 3: Apache authentification via OpenLDAP](#Section-3-Apache-authentification-via-OpenLDAP)
+    - [Section 4: OpenVPN](#Section-4-OpenVPN)
+- [DNS Server](#DNS-Server)
+  - [Install the necessary packages](### DNS server configuration)
+  - [DNS server configuration](#DNS-server-configuration)
+  - [Testing the DNS Server](#Testing-the-DNS-Server)
+- [Kerberos](#Kerberos)
+  - [Installing necessary packages](#Installing-necessary-packages)
+  - [Adding principals and password policies for users](#Adding-principals-and-password-policies-for-users)
+  - [SSH Service authentification](#SSH-Service-authentification)
+    - [install ssh server](#install-ssh-server)
+    - [edit sshd_config](#edit-sshd_config)
+    - [adding user and **root/admin** principals](#adding-user-and-rootadmin-principals)
+    - [Assigning the keytab to the admin and changepwd principals](#Assigning-the-keytab-to-the-admin-and-changepwd-principals)
+    - [Add a new user](#Add-a-new-user)
+# SSH, Apche, Openvpn authentification via OpenLdap
+
+    - [Section1: OpenLdap](#Section1-OpenLdap)
+    - [Section 2: SSH authentification via OpenLDAP](#Section-2-SSH-authentification-via-OpenLDAP)
+    - [Section 3: Apache authentification via OpenLDAP](#Section-3-Apache-authentification-via-OpenLDAP)
+    - [Section 4: OpenVPN](#Section-4-OpenVPN)
 
 ### Section1: OpenLdap
 
-OpenLDAP, or the Open Lightweight Directory Access Protocol, is an open-source implementation of the LDAP standard. LDAP is a protocol designed to access and manage directory information services, which are commonly used for storing and retrieving information about users and resources within a network
+OpenLDAP, or the Open Lightweight Directory Access Protocol, is an open-source implementation of the LDAP standard. 
 
 LDAP is instrumental in streamlining the authentication process by enabling applications and services to retrieve necessary information from a central directory server. This tutorial focuses on harnessing the capabilities of OpenLDAP to enhance authentication across diverse services such as SSH, Apache, and OpenVPN.
 
@@ -183,7 +206,8 @@ With our client machine all set up, let's try and log in as one of our added use
 sudo login
 ```
 
-![[successful login.png]]
+**![A screenshot of a computer program
+Description automatically generated](https://lh7-us.googleusercontent.com/QVGrSF9YGgZ-H9Jk5b5wRBH3uPRkM2v8WGrA-xevdOZ99cXDBTc2zva9t7qAoOtjrZ_s6Tyxky5kQu-SJ0AU8LtsjEfX4mc5hlZmsok1xu54Jg7ae89HF2C_S-ORmW_h7HRLApYW3BFBYN9FKUPitQ)**
 **and it works!**
 
 #### LDAPS
@@ -205,7 +229,7 @@ openssl genrsa -aes128 -out ldap-server.local.key 4096
 openssl req -new -days 3650 -key ldap-server.local.key -out ldap-server.local.csr
 ```
 
-![[csr server.png]]
+![](https://lh7-us.googleusercontent.com/ancIs8g8zWAvu70X1sjQdXAmZ9uaYaOXgD87HLJZPc76lO_NWf74uWJh9g0lMt4FoStQkDa-Q4wYX4atylEp_a-BnRdbHnSPgGhRbUUxHM0VQDPCzqxVBstf4vKvK08CL69hwosWKQQ1)
 
 - make sure that the Common Name matches the FQDN of our server
 
@@ -214,15 +238,15 @@ openssl req -new -days 3650 -key ldap-server.local.key -out ldap-server.local.cs
 ```
 sudo openssl x509 -in ldap-server.local.csr -out ldap-server.local.crt -req -signkey ldap-server.local.key -days 3650
 ```
-
+![](https://lh7-us.googleusercontent.com/4pPu9-hzQbZ_OdQBSULrE1EX2HLWevQ6ZtKkNVaUZstDAcSptslArQhM8YSYyOvrvBW2ISoN0n62Z302T0rNGET7V8Ecl76SLFmnfUvGGcWtJC08pjJ6fypCd8n-BLzlz9fh1Rm_Sywe)
 4. Copy the certificate and key to /etc/ldap/sasl2 directory
-   ![[sasl2.png]]
+   ![](https://lh7-us.googleusercontent.com/ypfqGrC-Z8I7XKcdzWpQnQXPcrNFZNXZrNWsJQto8X0R1i0yEg_1a5YTmsTzjGmKz2Zg_C6AOEvv6lQSkm9UN2E1YocfdliQdZ0fB5zag8MQCdFhfayw7U1kE_IQdvtI-94aSjLe9oZb)
 5. change the ownership to the openldap user by running
 
 ```
 sudo chown -R openldap:openldap /etc/ldap/sasl2
 ```
-
+![](https://lh7-us.googleusercontent.com/CHEDAm4eHrZYrI3rbcQZN7KbPRWCaPrG892lUkVyHXN8K6IB6sAHN3csEbGs6M3hNNZpdwMBHxKgWEuj7Vv_xW7lJZPujQVmU78XEBShI_4dQpoZm7XQvFX6znLOjpe9_Xb0fiE2UTYh)
 6. create the configuration file ssl-ldap.ldif containing
 
 ```
@@ -246,23 +270,29 @@ sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f ssl-ldap.ldif
 ```
 
 8. add the ldaps route in  **/etc/default/slapd**
-   ![[ldapsRoutes.png]]
+   ![](https://lh7-us.googleusercontent.com/w0Ej7CmxXEucDj2gBI4wukaV6FJ-nND4o4MMXZNO750MvhHn2GXWUz5CeOKZbdpq0vF-sugKiNtbtrdXP3hVMd4uRs8WEj5RhpFiSMoNFUJFLsZL-KHSlu-Xhj26eglyVRGSax_SpleG)
 9. edit **/etc/ldap/ldap.conf**
 
-- omment the line containing TLS_CACERT
-   - add the following lines:
+- comment the line containing TLS_CACERT and add the following lines:
 
 ```
 TLS_CACERT /etc/ldap/sasl2/ca-certificates.crt
 TLS_REQCERT allow
 ```
-
-![[ldap.conf.png]] 10. After restarting the slapd service we verify
+![](https://lh7-us.googleusercontent.com/w0Ej7CmxXEucDj2gBI4wukaV6FJ-nND4o4MMXZNO750MvhHn2GXWUz5CeOKZbdpq0vF-sugKiNtbtrdXP3hVMd4uRs8WEj5RhpFiSMoNFUJFLsZL-KHSlu-Xhj26eglyVRGSax_SpleG)
+ 10. After restarting the slapd service we verify
 `	ldapsearch -x -H ldaps://192.168.56.101 -b "dc=local
 	`
-![[ldapsResponse.png]]![[ldapsResponse.png]]
+![](https://lh7-us.googleusercontent.com/43VWZ1g8eMn0ZoznQw5cGbo0yFmgyBWVEUdeSTpAWeT6PxhzNib9nYRY5U4w2lzgX5NDjTi1TI6Njo_A0_4k0380HlN0Sqd0P-mqSaJ6iew2Ld5qzAF-zLlYfBwOP5szJhrqyUAgptTn)
 
 ##### Advantages of LDAPS
+  
+-  **Data Security:**
+    
+    - The primary advantage of LDAPS is the enhanced security it provides by encrypting the data transmitted between the client and the LDAP server. This is crucial when dealing with sensitive information such as user credentials or personal details.
+-  **Confidentiality:**
+    
+    - LDAPS ensures the confidentiality of the information exchanged during LDAP operations. This is especially important in environments where data privacy and security compliance are critical.
 
 ### Section 2: SSH authentification via OpenLDAP
 
@@ -282,7 +312,7 @@ sudo apt install ssh-server
    ```
    ssh-keygen -t rsa
    ```
-   ![[point.ssh.png]]
+   ![](https://lh7-us.googleusercontent.com/PomPoJVlbjthfFRiuaERXo_LHPL285nb4v99qgiBEsI0IH94DP4JJuRJhXW3OLECnNg2WkxDFzRpz6owu-7s8_FlgYZG3MPeOZkEKZtSYfaEBnQTsGazqAWsb6dnbt9U9s2cpKZINdJu)
 2. Copy the public key to the ldap
    ```
    ssh-copy-id bellaaj@client
@@ -298,23 +328,23 @@ sudo apt install ssh-server
    ```
 5. Connect to the ldap user without the need of a password
 
-   ![[ssh_bellaaj.png]]
+   ![](https://lh7-us.googleusercontent.com/7j1sQqdsJzNRd01YHOiXQ4al6TRUXQWSzIm_dq7iW-DYiDwv93HVcLEqDF8FxZ47ZI5FNTz5vicrdyWmVnOY6gOKsCBV4VEEqjWua9QcddVe8ZLXDUGMUd02ya8naY-PVmH9MuNSHV0_)
    At this stage, we cannot login to the other ldap user (badri) without the password
-   ![[ssh_badri.png]]
+   ![](https://lh7-us.googleusercontent.com/UQEGxBfth-eOPALGK9QyTyKOawZEKWM6zJJdRhbTdzJVyTg8nvHfhzWXDjkfcLCdIM88FitmTE7kV_0z8PkaXqI9wrlDZZN8X2fVFN6zyqe9FIWijYKgkagmN6Ofe_hhM1LF5vIiiB3J)
 
 6. Edit **/etc/ssh/sshd_config**
    we need to specify which groups are allowed to establish an ssh connection without the need of a password
    we add AllowGroups followed by the name of the group
 
-   ![[allowgroups.png]]
+   ![](https://lh7-us.googleusercontent.com/8CvNhQ2DcUhF_trLqyrsjAnywYgRxHyk2tYBZ5dflTg_Prdx7NQqQJQPiBdaZjHIsRXuXSjf6BNPJmxq9W7cBc5JP27_59dFZV3ftlmc19PeMHDgE9p0usqncdylbV91vdwm6XvzElWe)
 
 7. Test the connections
    We have configured our ldap server such that bellaaj belongs the the grp-GL and badri belongs to grp-RT.
    **Let’s test the connection with a user belonging to the allowed group (bellaaj):**
-   ![[ssh_bellaaj2.png]]
+   ![](https://lh7-us.googleusercontent.com/PxQD3W1Uu2DaEobeY0P055S_3elOekyh9A0isj3FfMlW2Lf0Bg0w8gawOANNABxAU-5fNIzQYQRPKC26sMEecoCF4ZJ7fRTrv4ug8Lm2Aa4H-HXGqDorXuG95aOJAOZ07kZHGDdmdu1p)
    and it works!
    **And now let's test the connection with a member of the other group:**
-   ![[ssh_badri2.png]]
+   ![](https://lh7-us.googleusercontent.com/2KWwnq9r3SzJQD57TakmT-FO90sGKMbfKWaPZeGOU-2U5KuM8r5Aig_Ksf0zO3uVmqzijlsYzcQixNhwtfBiQltXuIklEMJiOBTLZ9RJT00K4EGyGTPY7v3SIouclgOLZrIQRs4pTwL-)
    Since badri isn't a memeber of the grp-GL, we cannot establish an ssh connection without providing a password.
 
 ### Section 3: Apache authentification via OpenLDAP
@@ -549,3 +579,172 @@ Now, if we want to grant group based authorizations we need to replace  the Auth
 </Authorization>
 ```
 Now users of grp-GL such as bellaaj should connect with openvpn.
+# DNS Server
+  - [Install the necessary packages](### DNS server configuration)
+  - [DNS server configuration](#DNS-server-configuration)
+  - [Testing the DNS Server](#Testing-the-DNS-Server)
+## Install the necessary packages
+```
+sudo apt install bind9 bind9utils bind9-doc dnsutils
+```
+1. **bind9:**
+    
+    -  the core package that provides the BIND (Berkeley Internet Name Domain) DNS server software.
+2. **bind9utils:**
+    
+    - The `bind9utils` package contains utility programs and tools that complement the functionality of `bind9`.
+    
+3. **bind9-doc:**
+    
+    -  The `bind9-doc` package contains documentation and manuals related to BIND9.
+    
+4. **dnsutils:**
+    
+    -  The `dnsutils` package provides utilities for querying DNS servers and performing DNS-related tasks.
+
+## DNS server configuration
+We  go to  **/etc/bin** and edit named.conf.local
+the  named.conf.local file is used to define local zone configurations.
+Zones in DNS are logical partitions of the domain name space. 
+Here we have created a new zone called azizbellaaj.com that has the configuration file db.azizbellaaj.com under **/etc/bind/db.azizbellaaj.com**.
+![](https://lh7-us.googleusercontent.com/2yGO3pxAKElBwEaCsb1YgGlbcaLkF0-ayHhOnSYfE4AccSdlLXbi3BJg_O8ehIA4jXH0vYmCtUJ9sHBNZbxScLH8CRcNxQcdj61aRgj8XnY5xaCeldBbKBwvLcUMNK0nSR2YxI2hL-qi)
+
+We now create the file db.azizbellaaj.com. We specify the addresses of our LDAP, Apache and OpenVPN servers with their domain names.
+![](https://lh7-us.googleusercontent.com/4Y5az2gdRdYyToVJY9dpFlOKsxzfVMEzgXWfTwcjm0MA43oSpjjUJeSnVV2_6baLgdrw9UFFjKOLrOFlpU9lxLmtr-DSs6LrhvFeokHHzaM9fwMiFjGYrmYeaEEwCyNiSuUfCrbAq7YY)Then we execute: 
+```
+named-checkconf
+named-checkzone azizbellaaj.com db.azizbellaaj.com
+```
+And we finally restart bind9.
+## Testing the DNS Server
+In the machines of the our LDAP, Apache and OpenVPN servers,  we edit /etc/resolv.conf:
+We add the ip address of the dns machine above nameserver 127.0.0.53.
+![](https://lh7-us.googleusercontent.com/URo7bDWeTZcjwFIStZjFMvcy8QIou7GeRUJ2rjUCTLLkj1-I3SFgs2Dwc8jHCt8Twe962PDjHJNyrlBAZtgrSSxPNkbmUEEemymi_vt1x8s-laq7uRsn_-TfTtyHWGtb2SPRsgMQRgGc)In the client machine, we can now connect to the diffrent servers with the names  specified in named.conf
+![](https://lh7-us.googleusercontent.com/p2yqPzYvyGwinJWbOxkCmE_J9ket1fUj60BMSc8WMNBFpiUy7t3jS3xFAiHeDE7AzoKBJjADQ4Vfyxn62UWyAb1buUsdTH0CF6knXQy4sJTeAc6QAbZwRrxU0wJbuMJLoZzJ5v-RPq_u)
+![](https://lh7-us.googleusercontent.com/BTmePG_pgRgcWwyMZnoEYVzwggCzLM2_GSBYcac_hZRVGlBp29G96_8ajQlHVC30rq4Gu4yzwyhtFSDs5Ws9hMwDnK-fKUM1vxPWVBVrN9EUC-AwG-i6Ug6yhp0D0xyTXW6VYqmtsEzL)
+Even if the service is offline, the name resolution still works!
+![](https://lh7-us.googleusercontent.com/aQRgkWJG0uIkBCkaDoGFESPv_6AHWr6Tj1Il_00FvYcjZ3Hgfen6g8_nXvY3RftVaaKcbYcuFZyrUh9nkGdYNzw2HeE4gdCHZQvJF-n66XMdgOg5FaCM70BSNNT_qDs_u3xn_WZ9NNzx)
+![](https://lh7-us.googleusercontent.com/i6S8LjF8g6TU333DhV-IdMzC7Un8vzKbBg2_-m4nh7uelXaEA-3POS4GP_1D3T8ZvjxTt-QwkDozxp9KmQmcYc0Gc-umMqsRoBGH0ye_JUB5Qsr4U1I_t4GDMGjJ1H4mDPzew5NJ5Kr6)
+# Kerberos
+
+  - [Installing necessary packages](#Installing-necessary-packages)
+  - [Adding principals and password policies for users](#Adding-principals-and-password-policies-for-users)
+  - [SSH Service authentification](#SSH-Service-authentification)
+    - [install ssh server](#install-ssh-server)
+    - [edit sshd_config](#edit-sshd_config)
+    - [adding user and **root/admin** principals](#adding-user-and-rootadmin-principals)
+    - [Assigning the keytab to the admin and changepwd principals](#Assigning-the-keytab-to-the-admin-and-changepwd-principals)
+    - [Add a new user](#Add-a-new-user)
+Kerberos is a network authentication protocol designed to provide secure authentication for client-server applications over an insecure network.It operates based on the concept of a trusted third party (Key Distribution Center or KDC) and uses symmetric key cryptography to secure communication between entities
+## Installing necessary packages 
+```
+sudo apt install krb5-kdc krb5-admin-server krb5-config  -y
+```
+1. **krb5-kdc:**
+    - **Description:** `krb5-kdc` is the Key Distribution Center (KDC) component of the Kerberos system. The KDC is responsible for issuing ticket-granting tickets (TGTs) and service tickets.
+    
+2. **krb5-admin-server:**
+    
+    -  `krb5-admin-server`  provides administrative tools and interfaces for managing the Kerberos database and policies.
+    
+3. **krb5-config:**
+    
+    -  `krb5-config` is a utility package that provides scripts and tools for querying and configuring Kerberos settings.
+During installation, we will be prompted to enter information of our realm. 
+In Kerberos, a "realm" is a logical administrative domain where networked systems share a common Kerberos database and trust each other for authentication
+![](https://lh7-us.googleusercontent.com/i8tLK4sYHdqj8gYwpvo47aLMD19N6pMy_XqQJ5M5mJJ3fMTkMGX-zDB-cU9gDHSTJfQg3XNbyOodLBQqyRDU67WFsZAaKBIAL31ylMpZgvSuqqTJjzNLY2IAyPKg3dvSA5NLKZtfHcFIz8fpM36aG6U)   
+![](https://lh7-us.googleusercontent.com/KCK66TrnlhwyCFYvsw1p1Qyj2NGQF8dCqsq5LB10IB8ASE0oEY8Z13Osa6z6LtL0P2cLwk7W7XsSzAg4DSl8lK9IU1YD-4ignY2aFwSHUAJgDG-lLbtlABkII6Hj5FDnJQJcWmn6MJSoJQdAArUhhKk)
+![](https://lh7-us.googleusercontent.com/5HI8WDvxJo5uxcxWZzs9KErTMiF_MDMJe0E_1XYjDIon1CnWBzXLcnkKncxas1YNJfONJ1VUpyedEtg2FNXEwjYow4vnSqLXBsDar0aIndvH14DSah7XNH96J3Cp0Q54TfNjjW1Eh3FLj4Ssx7-fey8)
+![](https://lh7-us.googleusercontent.com/beZXKF6l6Q66bSyCLkq-lG5tINpofp1D8qAuMRUa5uVDIiQDF-Ht0B2mGXK87xKZtJXhBMpcDSsoCP1F9664W-n9Ej51QfmZzN29RRBhnr6NiXI-k8hLSKbKg332IsOtboOIt-LUO_x77eDbZ8_uPP4)
+With the installation done, we can check krb5kdc.conf file. This file specifies  parameters related to the operation and behavior of the Key Distribution Center. 
+![](https://lh7-us.googleusercontent.com/_c8o7sp4xHLr1V1WqDywKJCuEn22u68moU1U8zwwt68-H0WsRpfp1YasLUxSg4lypsK5kTp2AM1TbKNnWacaj14qINpaC835A8HbKHcknfa-RPxpjgHOc3mYo5hMaeoM1C7TRy1FjcHy6I20UjTZ6AE)
+## Adding principals and password policies for users
+First, let's create a new Kerberos realm and enter the master key.
+```
+krb5_newrealm 
+```
+![](https://lh7-us.googleusercontent.com/aRb3xgtk44hvoPYJYSwJ7qGLXxJY-4tUQA7Ff8A0Jo3vpIHulz2VwygpGsk_1OagJ8muasdLrvHjDizGrri3umTOj5yUkFDR8BJOVHHjD25tzKZFR-WNbxOKMGuFi7XSstHv56U9rwX9xNvvQEUzV6I)
+![](https://lh7-us.googleusercontent.com/uObPx0uBniixdAK-OSTo1Nyzc6ATM9U-71jQLHhWtqr5bWC21R-M8ocK3xzKXB1xZjZC-gTPVJaPoDpEAGrm8HhmQdF5VRB-wRpl63UbROc6jeguOtycdnv-BJJ2lEAHYhNJQCoK0e9YgyKygeSZYXc)
+we'll find under **/var/lib/krb5kdc** the created principal's files
+![](https://lh7-us.googleusercontent.com/0gZd-arVKQbEWNGRyXOS96DGRWw5sJ9049kFDzQpEBNsHYgWYtn-oOYTcNHbNGz51Ou_EHuougd6THO654UhF0hFr_OuFPbQbeVLNQAYgpdPN6Xtv_0xTUjOzZiEz3NNa-odaO6FdMnaRCjFJae3Dhk)
+now let's check the principal's permessions in kadm5.acl and uncomment the last line. 
+An access control list (ACL) file  defines the permissions and restrictions on administrative operations within the Kerberos database.
+![](https://lh7-us.googleusercontent.com/F_jhpjg3VYZ56okEXBXl0c_oLD5MTDkTzaPKiyIOzuzz7fAPrB96qajprx8hD2lQcV-Z-XesBBris3Edtbb_g7Q_gY4V_PdGcrwEsgpw7xnquUwYplcogFlLq8qsoMZeC4qBp84OSg6dMtpz50c4svM)
+To create a user, we  authenticate as our root principal and run 
+```
+kadmin.local
+```
+![](https://lh7-us.googleusercontent.com/NtDu06PRkCit0UQP3zsHgd1K4XkPddSGHvZQlRUHYWtOs6chQ6XQDrebd2wt4G1P-7zmBKDKr80uOm_fyd7lx8qpOIDsOEhBlr4MVdkqWrV0-WmRKFW7QIQBM38k8__-npccshglA0EeAdO3cd8ROOk)
+We can now create a principal `user` by  running 
+``` 
+add_principal user
+```
+![](https://lh7-us.googleusercontent.com/mIBhUqojkbRBDFS1Hna7RFWbmHLgEJos4U1Sez2-YmEhFeRY2TRo_hESmxMuMfUJZMg02a5qCtMIwc0z2kz03MtyRdgoSVAnl1vcCG46WyEpjNi5fEt5mxF2u94y8lh6SX_z3s9WT82f4TbJ4np3pkA)
+Then, we add the principals `root/admin`  and host/kdc.server.tn
+(we can list all our principals running `list_principals`)
+![](https://lh7-us.googleusercontent.com/-wdSrkkYK0ox9RbfIDuyraq2_9-tO43FaAHiwwYcLHu_ZDqQkPrHUwXKj5EFy8yRLn-MMJvLFABKp0pt2xp8OJnx69838_8WrRbsiyxWYphin3R59nzIMwobWupgvIS-iYaa47lGRJM10iryHDXeA-s)![](https://lh7-us.googleusercontent.com/C_2GPvP_svp5uOydx-PPP2hNFeoVxJUDboLYfAOXXPV1HmjxdcGZFmScG-bTY37YqpL8lxf29GuWIeQQfh_1yhOqpTndiB3-8H9K-2WccU5HRz0jjhQlQWvzdCA1Q1DluWlfWPRi2X8sz3y7IoQnyVc)
+Before proceeding, we need to restart the kerberos service 
+![](https://lh7-us.googleusercontent.com/7lJtJjkZDzv9nQpcWwf7VO8SmuFQ9NscByJY3XDga8HsU4aIliAkS4JLeW0xyCoBTYkbuTNFhRnKO-RNQxcdw2Xe15haq_EddzK51ddh52uslKgR1v_ETMZoF2Yrbu0Kd5PilTdf3QiI7zjvdyfwG2g)
+Now let's proceed and create the keytab using  **ktutils**
+A keytab  is a file used in Kerberos authentication systems to store one or more secret keys for Kerberos principals.
+let's run 
+
+```
+kutils
+```
+![](https://lh7-us.googleusercontent.com/muB2ppWI3AAhfQi_y68xc8Gg7Hpz2rsoKDj0A8jumf1ErvXyiKy5-bHqfliX9ON2_MaxWoIUH4VTDd2vVgUbsAw01rq0QX-Pb9F6xSLvFZBkh9ssW-Vqd3z9BVdyVX8zrpivYC3-A8H6anrBTqqGqz0)
+
+let's add an entry to our keytab file with the principal roo/admin
+```
+addent -passowrod -p root/admin@SERVER.TN -k 1 -e aes-256-cts-hmac-sha1-96
+```
+in order to write the line into our file we run wkt follwoed by the path of the keytab file
+```
+wkt /etc/krb5kdc/kadm5.keytab
+```
+
+![](https://lh7-us.googleusercontent.com/b6XfiIb7xEBigPEj-fWGrJyy3SUJsGYB-6bPWFmPHjJr2hLG6dY9rm-p8-wtska7rstcmkHk2Odvks7PZ1eNe5-m_gBLpKd2KVhIHfqK3ACWK1QW7UyeQ6qVNdw4Fb-T6ymH2FKTIvHU9vziuAZgnZs)
+
+let's check the added entry in the keytab file
+![](https://lh7-us.googleusercontent.com/xO-JNfEkJ-DO4LNHKXATRTLhuH4Ab3iAb9k5M53NTtTvKJ6ZlowIp7FmZSaBJnqjS94rFyjAGH6sWlX3kKxfO3j_W9iT_8Yqo208ojXMXNTAItZnbTXqkGTdGoV2lVwFDFj0OYzqcnBsVQ0nac7AsqI)
+And if we want to read from our keytab
+```
+rkt /etc/krb5kdc/kadm5.keytab
+```
+![](https://lh7-us.googleusercontent.com/QsMKzDFhxyF7FKQXz4sSTS9q35j5Mf1gnQpKQvE1Fe7_FUInyaRV0rMwEt1rdCu7gUiHLpaFWqIa14pOdCqeqKjYYoiI9-WiOSUAEJoz-hk94gJjkzOGsDE47ji49QnXsVcXKlmGxR9SU6Ubq2rgbXM)
+We'll do the same proceedure to add an entry for the host principal
+![](https://lh7-us.googleusercontent.com/mJvUWFYX_JzGErDPXpkd5LATMzTObDF5YzHbIXmYXK4Uiem3Y3fzkPBnBamBUTx1aoqRpmiMPNfNTmMBpGgzQH0FWrSK3O9auH7DagGxE4xhP7Hl6aeVD98j9heDTeMPZymzMuAslECYfFm6Cai7CUE)
+To display all the entries in our keytab so far we run 
+```
+klist -k kadm5.keytab
+```
+![](https://lh7-us.googleusercontent.com/W6pZUob2GaNUMpQ823Tlq-uv2Yt0XbttRabmUfdaUioZUPbJLUNbpAYDky28NWcPefBI2PjJrEJtkf2m_CsEX0hUA6-BuvybsFMHNB2ExoYV0Xz7z3PQ1eZnUb78OBv_lWYdXnkya3K0Zfga5BxKoRk)
+## SSH Service authentification
+### install ssh server
+```
+sudo apt install openssh-server
+```
+### edit sshd_config
+we will uncomment the lines 27, 28, 71 and 72
+**![](https://lh7-us.googleusercontent.com/RRqIftHScQUF1TS-xpMw8DFxf1NNfwnpNHkv0PbwFj2M4umF1Min7KacMDDau0vtu39UKmTf300z321gUj2pvY2Zb281qVa0hp8SAINuTbDSmEcm4Xv_BipplzlegWPvOBP9ytELbTwlmbOAXBkOkEM)**
+**![](https://lh7-us.googleusercontent.com/t7EbXdqk3Gw5sAe1W3OUnZt-pCSTWr-qfdfQ6JAt76gt6HwWaufZgQDQZeXbdpIvGNiVlRmJCSSSfar-k00jw09YesoL39kSmISyTEqfzdkNQ9GSWL5crp5_NTylcPFA7zz167LHLDGKUMpKJznH-u0)**
+### adding user and **root/admin** principals
+
+![](https://lh7-us.googleusercontent.com/YBz3TyiuJnsTO5KtwbECUe5yU30l8iFu6w5c7Q-CWqzJjWKFOSIX75cCShZdipw1QRp00Gd6fZI3r7x-N7oDlLIGTPy-MBdmhyFmKvTrJxWGWxaj0M3mtaDMSu2zEUzfy4WGD1ic_s9RbErgxK9nfkM)
+### Assigning the keytab to the admin and changepwd principals 
+```
+ktadd -k /etc/krb5kdc/kadm5.keytab kadmin/admin
+```
+![](https://lh7-us.googleusercontent.com/1kfFPex7CCDSp1d1kfIJMYW_c7UpPbIZe0Q3IY7E3sASmIuheHBrWjnyVCGF4e2oYbtqK63YatZus7rmujdHb4CoGewNMPepuga_yFS2OFDVCqtAtIeqpF-3XqFvw3x0c9fx8VR1qZpIbKrTVPvU1b4)
+### Add a new user
+we'll add the user 'utilisateur'
+```
+adduser utilisateur
+```
+![](https://lh7-us.googleusercontent.com/vEPufwt9uEfA61BN2NsgGSAhQon3aSOSuRCph_5WcUx8bwle9ySM54IDotxWb9XpJ7ibLkIN1cVGguTMjtiJqCKPP5hidqNwoYUMU-rQQJ8f1hqObQL57_njD394r-zIIl7Dgepy9Mfk1jyLC1z8yxc)we authenticate as the new user 
+```
+sudo  -l utilisateur
+```
+![](https://lh7-us.googleusercontent.com/mbCMdkL7sMPwOUEI1o4mrKLW34vOMs2XEevZAmfXMFXPIH9I-4YkGufPhvPQXi4l_LH233YCTe7-cKE_1LVri8IgZ9pExZdt6tWtYPEHS8boFwG2xRBSEiDlI2of7nV1uhOToE873d60C689gtH5bJU)
+then we'll try to ssh to the kdc server without being asked to enter its paswword 
+**![](https://lh7-us.googleusercontent.com/mbCMdkL7sMPwOUEI1o4mrKLW34vOMs2XEevZAmfXMFXPIH9I-4YkGufPhvPQXi4l_LH233YCTe7-cKE_1LVri8IgZ9pExZdt6tWtYPEHS8boFwG2xRBSEiDlI2of7nV1uhOToE873d60C689gtH5bJU)**
