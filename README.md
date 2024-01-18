@@ -1,27 +1,26 @@
+
 - [SSH, Apche, Openvpn authentification via OpenLdap](#SSH-Apche-Openvpn-authentification-via-OpenLdap)
     - [Section1: OpenLdap](#Section1-OpenLdap)
     - [Section 2: SSH authentification via OpenLDAP](#Section-2-SSH-authentification-via-OpenLDAP)
     - [Section 3: Apache authentification via OpenLDAP](#Section-3-Apache-authentification-via-OpenLDAP)
     - [Section 4: OpenVPN](#Section-4-OpenVPN)
 - [DNS Server](#DNS-Server)
-  - [Install the necessary packages](### DNS server configuration)
+  - [Install the necessary packages](###DNS-server-configuration)
   - [DNS server configuration](#DNS-server-configuration)
   - [Testing the DNS Server](#Testing-the-DNS-Server)
 - [Kerberos](#Kerberos)
   - [Installing necessary packages](#Installing-necessary-packages)
   - [Adding principals and password policies for users](#Adding-principals-and-password-policies-for-users)
   - [SSH Service authentification](#SSH-Service-authentification)
-    - [install ssh server](#install-ssh-server)
-    - [edit sshd_config](#edit-sshd_config)
-    - [adding user and **root/admin** principals](#adding-user-and-rootadmin-principals)
-    - [Assigning the keytab to the admin and changepwd principals](#Assigning-the-keytab-to-the-admin-and-changepwd-principals)
-    - [Add a new user](#Add-a-new-user)
+    
 # SSH, Apche, Openvpn authentification via OpenLdap
-
+  - [SSH, Apche, Openvpn authentification via OpenLdap](#SSH-Apche-Openvpn-authentification-via-OpenLdap)
     - [Section1: OpenLdap](#Section1-OpenLdap)
     - [Section 2: SSH authentification via OpenLDAP](#Section-2-SSH-authentification-via-OpenLDAP)
     - [Section 3: Apache authentification via OpenLDAP](#Section-3-Apache-authentification-via-OpenLDAP)
     - [Section 4: OpenVPN](#Section-4-OpenVPN)
+
+   
 
 ### Section1: OpenLdap
 
@@ -90,8 +89,8 @@ here, using the web interface, we have created:
 - under group we have created two groups with the common names (CN) : grp-GL and grp-RT
 - two users with common names (cn) :** Mohamed Aziz Bellaaj** and **Louay Badri**
   To check a user's information we can run :
-   **ldapsearch -x -b "dc=local" "(uid=badri)"**
-   **![A screenshot of a computer program
+   **ldapsearch -x -b "dc=local" "(uid=badri)"**
+   **![A screenshot of a computer program
 Description automatically generated](https://lh7-us.googleusercontent.com/l5ClTrlscwos9HDG6N_zPjYaL7h2pFf1G0q02OtqWamfIpx3bEN4Y9QMqntnbuoP2stDdeh13xEOsS7XZlX8tjMJD9yyU-A37-UijKLgQZnL48F8LYhvA87utnqUTDVMWe0Fmn8_d8jsBIlffz4efg)**
 
 ##### Add certificztes to users with OpenSSL
@@ -112,7 +111,7 @@ openssl req -new -key louay_pkey.pem -out csr.pem
 openssl req -x509 -key louay_pkey.pem -in csr.pem -out louay_certificate.pem
 ```
 
-5. \*\*If we want to send the certificate we have to modify it to be in binary format, we can do by running
+5. If we want to send the certificate we have to modify it to be in binary format, we can do by running
 
 ```
 openssl x509 -in /home/azizb/Desktop/louay_certificate.pem -out /home/azizb/Desktop/louay_certificate.der -outform DER
@@ -269,7 +268,7 @@ olcTLSCertificateKeyFile: /etc/ldap/sasl2/ldap-server.local.key
 sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f ssl-ldap.ldif
 ```
 
-8. add the ldaps route in  **/etc/default/slapd**
+8. add the ldaps route in  **/etc/default/slapd**
    ![](https://lh7-us.googleusercontent.com/w0Ej7CmxXEucDj2gBI4wukaV6FJ-nND4o4MMXZNO750MvhHn2GXWUz5CeOKZbdpq0vF-sugKiNtbtrdXP3hVMd4uRs8WEj5RhpFiSMoNFUJFLsZL-KHSlu-Xhj26eglyVRGSax_SpleG)
 9. edit **/etc/ldap/ldap.conf**
 
@@ -320,7 +319,7 @@ sudo apt install ssh-server
 3. Edit /etc/ssh/sshd_config
    ```
    PubkeyAuthentication yes
-   AuthorizedKeysFile  .ssh/authorized_keys
+   AuthorizedKeysFile  .ssh/authorized_keys
    ```
 4. Restart ssh service
    ```
@@ -491,11 +490,11 @@ Finally, let’s establish the tunnel on the client’s side
 ![](https://lh7-us.googleusercontent.com/S12NdRb2xOxX5jI12rKw1vojBuQgZXNDXsS2k_awCTUgfJL6Gr72UecIMuVw_lBUXVXPhZLl7zVqpMir63V6sTGg_6wJ18nTJ7PWhfxv3bVbWVN9unSJveOmPrMCzfMrqF_dE-ifyBqn)
 
 #### Authentication against openldap
-First we need the package ` openvpn-auth-ldap`
+First we need the package ` openvpn-auth-ldap`
 ```
 sudo apt install openvpn-auth-ldap
 ```
-Then,  let’s copy the auth-ldap.conf from  **/usr/share/doc/openvpn-auth-ldap/examples/** to the a directory called auth under **/etc/openvpn/**
+Then,  let’s copy the auth-ldap.conf from  **/usr/share/doc/openvpn-auth-ldap/examples/** to the a directory called auth under **/etc/openvpn/**
 ```
 cp /usr/share/doc/openvpn-auth-ldap/examples/auth-ldap.conf  /etc/openvpn/auth
 ```
@@ -552,29 +551,29 @@ Now, if we want to grant group based authorizations we need to replace  the Auth
 ```
 <Authorization>
 
-    # Base DN
+    # Base DN
 
-    BaseDN   "dc=local"
+    BaseDN   "dc=local"
 
-    # User Search Filter
+    # User Search Filter
 
-    SearchFilter "1"
+    SearchFilter "1"
 
-    # Require Group Membership
+    # Require Group Membership
 
-    RequireGroup    true
+    RequireGroup    true
 
-    <Group>
+    <Group>
 
-    BaseDN   "ou=Group,dc=local"
+    BaseDN   "ou=Group,dc=local"
 
-    RFC2307bis false
+    RFC2307bis false
 
-    SearchFilter    "(|(cn=grp-GL))"
+    SearchFilter    "(|(cn=grp-GL))"
 
-    MemberAttribute    memberUid
+    MemberAttribute    memberUid
 
-    </Group>
+    </Group>
 
 </Authorization>
 ```
@@ -635,6 +634,7 @@ Even if the service is offline, the name resolution still works!
     - [adding user and **root/admin** principals](#adding-user-and-rootadmin-principals)
     - [Assigning the keytab to the admin and changepwd principals](#Assigning-the-keytab-to-the-admin-and-changepwd-principals)
     - [Add a new user](#Add-a-new-user)
+    
 Kerberos is a network authentication protocol designed to provide secure authentication for client-server applications over an insecure network.It operates based on the concept of a trusted third party (Key Distribution Center or KDC) and uses symmetric key cryptography to secure communication between entities
 ## Installing necessary packages 
 ```
@@ -685,7 +685,7 @@ Then, we add the principals `root/admin`  and host/kdc.server.tn
 ![](https://lh7-us.googleusercontent.com/-wdSrkkYK0ox9RbfIDuyraq2_9-tO43FaAHiwwYcLHu_ZDqQkPrHUwXKj5EFy8yRLn-MMJvLFABKp0pt2xp8OJnx69838_8WrRbsiyxWYphin3R59nzIMwobWupgvIS-iYaa47lGRJM10iryHDXeA-s)![](https://lh7-us.googleusercontent.com/C_2GPvP_svp5uOydx-PPP2hNFeoVxJUDboLYfAOXXPV1HmjxdcGZFmScG-bTY37YqpL8lxf29GuWIeQQfh_1yhOqpTndiB3-8H9K-2WccU5HRz0jjhQlQWvzdCA1Q1DluWlfWPRi2X8sz3y7IoQnyVc)
 Before proceeding, we need to restart the kerberos service 
 ![](https://lh7-us.googleusercontent.com/7lJtJjkZDzv9nQpcWwf7VO8SmuFQ9NscByJY3XDga8HsU4aIliAkS4JLeW0xyCoBTYkbuTNFhRnKO-RNQxcdw2Xe15haq_EddzK51ddh52uslKgR1v_ETMZoF2Yrbu0Kd5PilTdf3QiI7zjvdyfwG2g)
-Now let's proceed and create the keytab using  **ktutils**
+Now let's proceed and create the keytab using  **ktutils**
 A keytab  is a file used in Kerberos authentication systems to store one or more secret keys for Kerberos principals.
 let's run 
 
