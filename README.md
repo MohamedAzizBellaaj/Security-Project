@@ -726,8 +726,8 @@ sudo apt install openssh-server
 ```
 ### edit sshd_config
 we will uncomment the lines 27, 28, 71 and 72
-**![](https://lh7-us.googleusercontent.com/RRqIftHScQUF1TS-xpMw8DFxf1NNfwnpNHkv0PbwFj2M4umF1Min7KacMDDau0vtu39UKmTf300z321gUj2pvY2Zb281qVa0hp8SAINuTbDSmEcm4Xv_BipplzlegWPvOBP9ytELbTwlmbOAXBkOkEM)**
-**![](https://lh7-us.googleusercontent.com/t7EbXdqk3Gw5sAe1W3OUnZt-pCSTWr-qfdfQ6JAt76gt6HwWaufZgQDQZeXbdpIvGNiVlRmJCSSSfar-k00jw09YesoL39kSmISyTEqfzdkNQ9GSWL5crp5_NTylcPFA7zz167LHLDGKUMpKJznH-u0)**
+![](https://lh7-us.googleusercontent.com/RRqIftHScQUF1TS-xpMw8DFxf1NNfwnpNHkv0PbwFj2M4umF1Min7KacMDDau0vtu39UKmTf300z321gUj2pvY2Zb281qVa0hp8SAINuTbDSmEcm4Xv_BipplzlegWPvOBP9ytELbTwlmbOAXBkOkEM)
+![](https://lh7-us.googleusercontent.com/t7EbXdqk3Gw5sAe1W3OUnZt-pCSTWr-qfdfQ6JAt76gt6HwWaufZgQDQZeXbdpIvGNiVlRmJCSSSfar-k00jw09YesoL39kSmISyTEqfzdkNQ9GSWL5crp5_NTylcPFA7zz167LHLDGKUMpKJznH-u0)
 ### adding user and **root/admin** principals
 
 ![](https://lh7-us.googleusercontent.com/YBz3TyiuJnsTO5KtwbECUe5yU30l8iFu6w5c7Q-CWqzJjWKFOSIX75cCShZdipw1QRp00Gd6fZI3r7x-N7oDlLIGTPy-MBdmhyFmKvTrJxWGWxaj0M3mtaDMSu2zEUzfy4WGD1ic_s9RbErgxK9nfkM)
@@ -741,10 +741,11 @@ we'll add the user 'utilisateur'
 ```
 adduser utilisateur
 ```
-![](https://lh7-us.googleusercontent.com/vEPufwt9uEfA61BN2NsgGSAhQon3aSOSuRCph_5WcUx8bwle9ySM54IDotxWb9XpJ7ibLkIN1cVGguTMjtiJqCKPP5hidqNwoYUMU-rQQJ8f1hqObQL57_njD394r-zIIl7Dgepy9Mfk1jyLC1z8yxc)we authenticate as the new user 
+![](https://lh7-us.googleusercontent.com/vEPufwt9uEfA61BN2NsgGSAhQon3aSOSuRCph_5WcUx8bwle9ySM54IDotxWb9XpJ7ibLkIN1cVGguTMjtiJqCKPP5hidqNwoYUMU-rQQJ8f1hqObQL57_njD394r-zIIl7Dgepy9Mfk1jyLC1z8yxc)
+we authenticate as the new user 
 ```
 sudo  -l utilisateur
 ```
 ![](https://lh7-us.googleusercontent.com/mbCMdkL7sMPwOUEI1o4mrKLW34vOMs2XEevZAmfXMFXPIH9I-4YkGufPhvPQXi4l_LH233YCTe7-cKE_1LVri8IgZ9pExZdt6tWtYPEHS8boFwG2xRBSEiDlI2of7nV1uhOToE873d60C689gtH5bJU)
 then we'll try to ssh to the kdc server without being asked to enter its paswword 
-**![](https://lh7-us.googleusercontent.com/mbCMdkL7sMPwOUEI1o4mrKLW34vOMs2XEevZAmfXMFXPIH9I-4YkGufPhvPQXi4l_LH233YCTe7-cKE_1LVri8IgZ9pExZdt6tWtYPEHS8boFwG2xRBSEiDlI2of7nV1uhOToE873d60C689gtH5bJU)**
+![](https://lh7-us.googleusercontent.com/mbCMdkL7sMPwOUEI1o4mrKLW34vOMs2XEevZAmfXMFXPIH9I-4YkGufPhvPQXi4l_LH233YCTe7-cKE_1LVri8IgZ9pExZdt6tWtYPEHS8boFwG2xRBSEiDlI2of7nV1uhOToE873d60C689gtH5bJU)
